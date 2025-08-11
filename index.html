@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mathe-Rätsel — Allesgutemonika.de</title>
+<title>Allgemeinwissens-Quiz</title>
 
 <style>
 :root {
   --bg-gradient: linear-gradient(180deg, #fdfefe 0%, #f4f8fb 100%);
   --card-bg: rgba(255, 255, 255, 0.85);
-  --accent: #007aff; /* Apple iOS Blau */
+  --accent: #007aff;
   --text-color: #1c1c1e;
   --muted: #6e6e73;
 }
@@ -50,7 +50,6 @@ html, body {
   max-width: 500px;
   width: 100%;
   text-align: center;
-  transform: scale(1);
   transition: transform 0.3s ease;
 }
 
@@ -70,43 +69,14 @@ p.lead {
   margin-bottom: 24px;
 }
 
-.task {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-  background: white;
-  padding: 14px 18px;
-  border-radius: 12px;
-  display: inline-block;
-  font-size: 18px;
-  margin-bottom: 20px;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
-}
-
-input[type="number"] {
-  appearance: none;
-  border: 1px solid rgba(0,0,0,0.1);
-  background: white;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-size: 16px;
-  outline: none;
-  transition: border 0.2s ease;
-}
-
-input[type="number"]:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
-}
-
-.controls {
+.answers {
   display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
+  flex-direction: column;
+  gap: 12px;
 }
 
 button {
-  padding: 10px 18px;
+  padding: 12px 18px;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -115,22 +85,23 @@ button {
   transition: background 0.3s ease, transform 0.1s ease;
 }
 
-button.primary {
-  background: var(--accent);
-  color: white;
-}
-
-button.primary:hover {
-  background: #0060d6;
-}
-
-button.ghost {
+button.answer {
   background: rgba(0,0,0,0.04);
   color: var(--text-color);
 }
 
-button.ghost:hover {
+button.answer:hover {
   background: rgba(0,0,0,0.07);
+}
+
+button.answer.correct {
+  background: rgba(16,185,129,0.15);
+  color: #047857;
+}
+
+button.answer.wrong {
+  background: rgba(239,68,68,0.15);
+  color: #991b1b;
 }
 
 button:active {
@@ -140,95 +111,83 @@ button:active {
 .result {
   margin-top: 20px;
   font-weight: 600;
-  padding: 10px 14px;
-  border-radius: 12px;
-  display: inline-block;
-}
-
-.ok {
-  background: rgba(16,185,129,0.12);
-  color: #047857;
-}
-
-.bad {
-  background: rgba(239,68,68,0.12);
-  color: #991b1b;
-}
-
-.note {
-  display: block;
-  margin-top: 14px;
-  font-size: 13px;
-  color: var(--muted);
 }
 </style>
 </head>
 <body>
   <div class="wrap">
     <main class="card">
-      <h1>Mathe-Rätsel</h1>
-      <p class="lead">Finde ein Paar positiver ganzer Zahlen <b>x</b> und <b>y</b>.</p>
-      <div class="task">x³ + y³ = 1729</div>
-      <div>
-        <input id="x" type="number" min="1" placeholder="x">
-        <input id="y" type="number" min="1" placeholder="y">
-      </div>
-      <div class="controls">
-        <button class="primary" id="checkBtn">Prüfen</button>
-        <button class="ghost" id="hintBtn">Hinweis</button>
-        <button class="ghost" id="resetBtn">Reset</button>
-      </div>
-      <div id="result" class="result" style="display:none"></div>
-      <small class="note">1729 ist die berühmte Hardy-Ramanujan-Zahl.</small>
+      <h1 id="quiz-title">Allgemeinwissens-Quiz</h1>
+      <p class="lead" id="question-text">Lade Frage...</p>
+      <div class="answers" id="answers"></div>
+      <div class="result" id="result"></div>
     </main>
   </div>
 
 <script>
-(function(){
-  const solutions = new Set(["12|1","1|12","10|9","9|10"]);
-  const elX = document.getElementById('x');
-  const elY = document.getElementById('y');
-  const btn = document.getElementById('checkBtn');
-  const res = document.getElementById('result');
-  const hint = document.getElementById('hintBtn');
-  const reset = document.getElementById('resetBtn');
+const quizData = [
+  { q: "Wie viele Kontinente gibt es auf der Erde?", a: ["5", "6", "7", "8"], correct: 2 },
+  { q: "Welches chemische Symbol hat Gold?", a: ["Ag", "Au", "Gd", "Go"], correct: 1 },
+  { q: "Wer malte die Mona Lisa?", a: ["Leonardo da Vinci", "Michelangelo", "Raphael", "Van Gogh"], correct: 0 },
+  { q: "Welcher Planet ist der größte in unserem Sonnensystem?", a: ["Mars", "Saturn", "Jupiter", "Neptun"], correct: 2 },
+  { q: "Wie viele Bundesländer hat Deutschland?", a: ["14", "15", "16", "17"], correct: 2 },
+  { q: "In welchem Jahr fiel die Berliner Mauer?", a: ["1987", "1988", "1989", "1990"], correct: 2 },
+  { q: "Wie heißt die Hauptstadt von Kanada?", a: ["Toronto", "Ottawa", "Vancouver", "Montreal"], correct: 1 },
+  { q: "Welche Einheit misst elektrische Stromstärke?", a: ["Volt", "Watt", "Ampere", "Ohm"], correct: 2 },
+  { q: "Wie viele Zähne hat ein erwachsener Mensch normalerweise?", a: ["28", "30", "32", "34"], correct: 2 },
+  { q: "Welches Tier ist das größte lebende Tier der Erde?", a: ["Elefant", "Blauwal", "Pottwal", "Giraffe"], correct: 1 }
+];
 
-  function show(text, ok){
-    res.textContent = text;
-    res.className = 'result ' + (ok? 'ok':'bad');
-    res.style.display = 'inline-block';
+let currentQuestion = 0;
+
+function loadQuestion() {
+  const qData = quizData[currentQuestion];
+  document.getElementById("question-text").textContent = qData.q;
+  const answersDiv = document.getElementById("answers");
+  answersDiv.innerHTML = "";
+  document.getElementById("result").textContent = "";
+  
+  qData.a.forEach((answerText, index) => {
+    const btn = document.createElement("button");
+    btn.textContent = answerText;
+    btn.className = "answer";
+    btn.onclick = () => checkAnswer(index, btn);
+    answersDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(index, button) {
+  const qData = quizData[currentQuestion];
+  const buttons = document.querySelectorAll(".answer");
+  
+  if (index === qData.correct) {
+    button.classList.add("correct");
+    document.getElementById("result").textContent = "✅ Richtig!";
+    setTimeout(() => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showEndScreen();
+      }
+    }, 800);
+  } else {
+    button.classList.add("wrong");
+    document.getElementById("result").textContent = "❌ Falsch, versuche es nochmal!";
+    setTimeout(() => {
+      button.classList.remove("wrong");
+    }, 800);
   }
+}
 
-  btn.addEventListener('click', function(){
-    const x = parseInt(elX.value,10);
-    const y = parseInt(elY.value,10);
-    if(!Number.isInteger(x) || !Number.isInteger(y) || x < 1 || y < 1){
-      show('Bitte positive ganze Zahlen eingeben.', false);
-      return;
-    }
-    if(solutions.has(x + '|' + y)){
-      show('✅ Feini! Hier ist deine Belohnung: RVHE-LY268T-MTBR ', true);
-    } else {
-      show('❌ Opfer. Mach nochmal neu.', false);
-    }
-  });
+function showEndScreen() {
+  document.getElementById("quiz-title").textContent = "🎉 Glückwunsch!";
+  document.getElementById("question-text").textContent = "Du hast alle Fragen richtig beantwortet!";
+  document.getElementById("answers").innerHTML = "";
+  document.getElementById("result").textContent = "";
+}
 
-  hint.addEventListener('click', function(){
-    alert('Tipp: 1729 = 10³ + 9³ und 12³ + 1³.');
-  });
-
-  reset.addEventListener('click', function(){
-    elX.value = '';
-    elY.value = '';
-    res.style.display = 'none';
-  });
-
-  [elX, elY].forEach(inp => inp.addEventListener('keydown', function(e){
-    if(e.key === 'Enter') btn.click();
-  }));
-})();
+loadQuestion();
 </script>
 </body>
 </html>
-
-
