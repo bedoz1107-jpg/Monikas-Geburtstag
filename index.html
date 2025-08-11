@@ -7,11 +7,13 @@
 
 <style>
 :root {
-  --bg-gradient: linear-gradient(180deg, #fdfefe 0%, #f4f8fb 100%);
-  --card-bg: rgba(255, 255, 255, 0.85);
-  --accent: #007aff;
-  --text-color: #1c1c1e;
-  --muted: #6e6e73;
+  --bg-gradient: linear-gradient(135deg, #1e1e2f 0%, #27293d 100%);
+  --card-bg: rgba(30, 30, 47, 0.85);
+  --accent: #4f9aff;
+  --text-color: #e0e0ff;
+  --muted: #a0a0b3;
+  --correct-bg: #2d7a2d;
+  --wrong-bg: #a83a3a;
 }
 
 * {
@@ -21,106 +23,133 @@
 html, body {
   height: 100%;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: var(--bg-gradient);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
-  animation: fadeIn 0.8s ease-out;
+  -moz-osx-font-smoothing: grayscale;
+  animation: fadeIn 1s ease-out forwards;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .wrap {
-  min-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 540px;
 }
 
 .card {
   background: var(--card-bg);
-  backdrop-filter: blur(16px) saturate(150%);
   border-radius: 24px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-  padding: 40px;
-  max-width: 500px;
-  width: 100%;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+  padding: 48px 36px;
   text-align: center;
-  transition: transform 0.3s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  user-select: none;
 }
 
 .card:hover {
-  transform: scale(1.02);
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.85);
 }
 
 h1 {
-  font-size: 24px;
-  margin-bottom: 8px;
-  font-weight: 600;
+  font-size: 28px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--accent);
 }
 
 p.lead {
   color: var(--muted);
-  font-size: 16px;
-  margin-bottom: 24px;
+  font-size: 18px;
+  margin-bottom: 28px;
+  line-height: 1.4;
+  min-height: 60px;
 }
 
 .answers {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 button {
-  padding: 12px 18px;
-  border-radius: 12px;
+  background: transparent;
+  border: 2.5px solid var(--accent);
+  color: var(--accent);
+  padding: 14px 22px;
+  border-radius: 18px;
   font-weight: 600;
+  font-size: 17px;
   cursor: pointer;
-  border: none;
-  font-size: 15px;
-  transition: background 0.3s ease, transform 0.1s ease;
+  transition: background-color 0.35s ease, color 0.35s ease, transform 0.15s ease;
+  box-shadow: 0 4px 10px rgba(79,154,255,0.25);
 }
 
-button.answer {
-  background: rgba(0,0,0,0.04);
-  color: var(--text-color);
+button:hover:not(.correct):not(.wrong) {
+  background-color: var(--accent);
+  color: var(--card-bg);
+  transform: scale(1.05);
 }
 
-button.answer:hover {
-  background: rgba(0,0,0,0.07);
+button:active:not(.correct):not(.wrong) {
+  transform: scale(0.97);
 }
 
-button.answer.correct {
-  background: rgba(16,185,129,0.15);
-  color: #047857;
+button.correct {
+  background-color: var(--correct-bg);
+  border-color: var(--correct-bg);
+  color: #d0f0d0;
+  box-shadow: 0 0 12px 3px rgba(45, 122, 45, 0.7);
 }
 
-button.answer.wrong {
-  background: rgba(239,68,68,0.15);
-  color: #991b1b;
-}
-
-button:active {
-  transform: scale(0.98);
+button.wrong {
+  background-color: var(--wrong-bg);
+  border-color: var(--wrong-bg);
+  color: #f5c5c5;
+  box-shadow: 0 0 12px 3px rgba(168, 58, 58, 0.7);
 }
 
 .result {
-  margin-top: 20px;
-  font-weight: 600;
+  margin-top: 24px;
+  font-weight: 700;
+  font-size: 18px;
+  min-height: 28px;
+  color: var(--accent);
+  user-select: none;
+  min-height: 30px;
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 32px 24px;
+  }
+  h1 {
+    font-size: 22px;
+  }
+  button {
+    font-size: 15px;
+    padding: 12px 18px;
+  }
 }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <main class="card">
+    <main class="card" role="main" aria-live="polite" aria-atomic="true">
       <h1 id="quiz-title">Allgemeinwissens-Quiz</h1>
       <p class="lead" id="question-text">Lade Frage...</p>
-      <div class="answers" id="answers"></div>
-      <div class="result" id="result"></div>
+      <div class="answers" id="answers" role="list"></div>
+      <div class="result" id="result" aria-live="assertive"></div>
     </main>
   </div>
 
@@ -135,7 +164,17 @@ const quizData = [
   { q: "Wie heißt die Hauptstadt von Kanada?", a: ["Toronto", "Ottawa", "Vancouver", "Montreal"], correct: 1 },
   { q: "Welche Einheit misst elektrische Stromstärke?", a: ["Volt", "Watt", "Ampere", "Ohm"], correct: 2 },
   { q: "Wie viele Zähne hat ein erwachsener Mensch normalerweise?", a: ["28", "30", "32", "34"], correct: 2 },
-  { q: "Welches Tier ist das größte lebende Tier der Erde?", a: ["Elefant", "Blauwal", "Pottwal", "Giraffe"], correct: 1 }
+  { q: "Welches Tier ist das größte lebende Tier der Erde?", a: ["Elefant", "Blauwal", "Pottwal", "Giraffe"], correct: 1 },
+  { q: "Wie viele Bundesstaaten hat die USA?", a: ["48", "49", "50", "51"], correct: 2 },
+  { q: "Was ist die Hauptstadt von Australien?", a: ["Sydney", "Melbourne", "Canberra", "Brisbane"], correct: 2 },
+  { q: "Welches Element hat das chemische Symbol 'O'?", a: ["Gold", "Sauerstoff", "Silber", "Zink"], correct: 1 },
+  { q: "Wer schrieb 'Faust'?", a: ["Goethe", "Schiller", "Heine", "Brecht"], correct: 0 },
+  { q: "Wie viele Planeten gibt es in unserem Sonnensystem?", a: ["7", "8", "9", "10"], correct: 1 },
+  { q: "Welches Land hat die meisten Einwohner?", a: ["Indien", "China", "USA", "Indonesien"], correct: 1 },
+  { q: "Wie viele Minuten hat eine Stunde?", a: ["50", "60", "70", "80"], correct: 1 },
+  { q: "Wie heißt das größte Meer der Erde?", a: ["Atlantischer Ozean", "Indischer Ozean", "Pazifischer Ozean", "Arktischer Ozean"], correct: 2 },
+  { q: "Welche Sprache hat die meisten Muttersprachler?", a: ["Englisch", "Mandarin", "Spanisch", "Hindi"], correct: 1 },
+  { q: "Wer war der erste Mensch auf dem Mond?", a: ["Yuri Gagarin", "Neil Armstrong", "Buzz Aldrin", "Michael Collins"], correct: 1 }
 ];
 
 let currentQuestion = 0;
@@ -151,6 +190,7 @@ function loadQuestion() {
     const btn = document.createElement("button");
     btn.textContent = answerText;
     btn.className = "answer";
+    btn.setAttribute("role", "listitem");
     btn.onclick = () => checkAnswer(index, btn);
     answersDiv.appendChild(btn);
   });
@@ -159,10 +199,13 @@ function loadQuestion() {
 function checkAnswer(index, button) {
   const qData = quizData[currentQuestion];
   const buttons = document.querySelectorAll(".answer");
-  
+
+  // Verhindere Mehrfachklicks
+  buttons.forEach(b => b.disabled = true);
+
   if (index === qData.correct) {
     button.classList.add("correct");
-    document.getElementById("result").textContent = "✅ Feini! ";
+    document.getElementById("result").textContent = "✅ Feini!";
     setTimeout(() => {
       currentQuestion++;
       if (currentQuestion < quizData.length) {
@@ -170,13 +213,16 @@ function checkAnswer(index, button) {
       } else {
         showEndScreen();
       }
-    }, 800);
+    }, 1000);
   } else {
     button.classList.add("wrong");
     document.getElementById("result").textContent = "❌ Opfer. mach nochmal.";
+    // Buttons wieder aktivieren nach 1s
     setTimeout(() => {
       button.classList.remove("wrong");
-    }, 800);
+      buttons.forEach(b => b.disabled = false);
+      document.getElementById("result").textContent = "";
+    }, 1000);
   }
 }
 
@@ -191,4 +237,3 @@ loadQuestion();
 </script>
 </body>
 </html>
-
