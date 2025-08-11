@@ -1,55 +1,273 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Mathe-Rätsel</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mathe-Rätsel — Allesgutemonika.de</title>
+
 <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f4; }
-    input, button { font-size: 1.2em; padding: 8px; margin: 5px; }
-    .result { margin-top: 20px; font-weight: bold; }
-    h1 { color: #333; }
+  /* System-Font wie bei Apple */
+  :root{
+    --bg:#f5f7fa;
+    --card:#ffffffcc;
+    --muted:#6b7280;
+    --accent:#0a84ff; /* blauer Akzent wie macOS/iOS */
+    --glass: rgba(255,255,255,0.7);
+  }
+
+  html,body{
+    height:100%;
+    margin:0;
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui;
+    background: linear-gradient(180deg, #f6f8fb 0%, #eef3f8 100%);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    color:#111827;
+  }
+
+  /* zentrierter Container */
+  .wrap{
+    min-height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 20px;
+  }
+
+  /* Card mit Glassmorphism */
+  .card{
+    width:100%;
+    max-width:760px;
+    background:var(--card);
+    border-radius:18px;
+    box-shadow: 0 10px 30px rgba(15,23,42,0.08);
+    backdrop-filter: blur(8px) saturate(120%);
+    padding:34px;
+    border: 1px solid rgba(15,23,42,0.04);
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:18px;
+  }
+
+  .logo{
+    width:56px;
+    height:56px;
+    border-radius:12px;
+    background: linear-gradient(135deg,#ffffff,#eef6ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    color:var(--accent);
+    font-size:20px;
+    box-shadow: 0 4px 14px rgba(10,132,255,0.08), inset 0 -2px 6px rgba(10,132,255,0.03);
+  }
+
+  h1{
+    margin:0;
+    font-size:20px;
+    letter-spacing:-0.2px;
+  }
+
+  p.lead{
+    margin:8px 0 20px 0;
+    color:var(--muted);
+  }
+
+  .task{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+    background: linear-gradient(180deg,#fbfdff,#f4f9ff);
+    padding:14px 18px;
+    border-radius:10px;
+    border:1px solid rgba(15,23,42,0.03);
+    box-shadow: 0 6px 18px rgba(13,20,37,0.03);
+    display:inline-block;
+    margin-bottom:20px;
+    font-size:18px;
+  }
+
+  .form-row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+
+  label{
+    display:block;
+    font-size:14px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+
+  input[type="number"]{
+    -webkit-appearance:none;
+    appearance:none;
+    border:1px solid rgba(15,23,42,0.06);
+    background:transparent;
+    padding:10px 12px;
+    border-radius:10px;
+    font-size:16px;
+    outline: none;
+    width:110px;
+    box-shadow: 0 4px 10px rgba(12,19,35,0.03);
+  }
+
+  .controls{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-top:14px;
+  }
+
+  button.primary{
+    background: linear-gradient(180deg,var(--accent), #0066d6);
+    color:white;
+    border:none;
+    padding:10px 16px;
+    border-radius:12px;
+    font-weight:600;
+    box-shadow: 0 8px 20px rgba(10,132,255,0.18);
+    cursor:pointer;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  button.primary:active{ transform: translateY(1px); }
+  button.ghost{
+    background:transparent;
+    border:1px solid rgba(15,23,42,0.06);
+    padding:9px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    color:var(--muted);
+  }
+
+  .result{
+    margin-top:18px;
+    padding:12px 14px;
+    border-radius:10px;
+    font-weight:600;
+    display:inline-block;
+  }
+  .ok{ background: rgba(16,185,129,0.12); color:#047857; border:1px solid rgba(4,120,87,0.06); }
+  .bad{ background: rgba(239,68,68,0.08); color:#991b1b; border:1px solid rgba(153,27,27,0.04); }
+
+  small.note{
+    display:block;
+    margin-top:14px;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  footer{
+    margin-top:20px;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  @media (max-width:520px){
+    .form-row{ flex-direction:column; align-items:stretch; }
+    input[type="number"]{ width:100%; }
+    .controls{ flex-direction:column; align-items:stretch; }
+  }
 </style>
 </head>
 <body>
+  <div class="wrap">
+    <main class="card" role="main" aria-labelledby="title">
+      <header>
+        <div class="logo">AM</div>
+        <div>
+          <h1 id="title">Mathe-Rätsel</h1>
+          <div class="lead">Finde ein Paar positiver ganzer Zahlen <strong>x</strong> und <strong>y</strong>.</div>
+        </div>
+      </header>
 
-<h1>Mathe-Rätsel mit geiler Belohnung</h1>
-<p>Finde <b>ein Paar</b> positiver ganzer Zahlen <code>x</code> und <code>y</code>, sodass gilt:</p>
-<p><code>x³ + y³ = 1729</code></p>
+      <div class="task" aria-hidden="false">
+        <code style="font-size:16px;">x³ + y³ = 1729</code>
+      </div>
 
-<label for="x">x:</label>
-<input type="number" id="x" min="1">
-<label for="y">y:</label>
-<input type="number" id="y" min="1">
-<br>
-<button onclick="checkAnswer()">Prüfen</button>
+      <div style="margin-top:14px;">
+        <label for="x">x</label>
+        <div class="form-row">
+          <input id="x" type="number" min="1" inputmode="numeric" placeholder="z. B. 10" />
+          <div style="flex:1">
+            <label for="y">y</label>
+            <input id="y" type="number" min="1" inputmode="numeric" placeholder="z. B. 9" />
+          </div>
+        </div>
 
-<div class="result" id="result"></div>
+        <div class="controls" role="group" aria-label="Aktionen">
+          <button class="primary" id="checkBtn">Prüfen</button>
+          <button class="ghost" id="hintBtn">Hinweis</button>
+          <button class="ghost" id="resetBtn">Zurücksetzen</button>
+        </div>
+
+        <div id="result" class="result" aria-live="polite" style="display:none"></div>
+
+        <small class="note">Hinweis: 1729 ist die berühmte Ramanujan-Hardy-Zahl.</small>
+      </div>
+
+      <footer>
+        © Allesgutemonika.de
+      </footer>
+    </main>
+  </div>
 
 <script>
-function checkAnswer() {
-    const x = parseInt(document.getElementById('x').value, 10);
-    const y = parseInt(document.getElementById('y').value, 10);
-    const res = document.getElementById('result');
+(function(){
+  const solutions = new Set([
+    "12|1","1|12","10|9","9|10"
+  ]);
 
-    // Liste aller Lösungen
-    const solutions = [
-        [12, 1],
-        [1, 12],
-        [10, 9],
-        [9, 10]
-    ];
+  const elX = document.getElementById('x');
+  const elY = document.getElementById('y');
+  const btn = document.getElementById('checkBtn');
+  const res = document.getElementById('result');
+  const hint = document.getElementById('hintBtn');
+  const reset = document.getElementById('resetBtn');
 
-    let correct = solutions.some(pair => pair[0] === x && pair[1] === y);
+  function show(text, ok){
+    res.textContent = text;
+    res.className = 'result ' + (ok? 'ok':'bad');
+    res.style.display = 'inline-block';
+  }
 
-    if (correct) {
-        res.textContent = "✅ Richtig! Feini, hier ist deine Belohnung:";
-        res.style.color = "green";
-    } else {
-        res.textContent = "❌ Opfer. mach nochmal";
-        res.style.color = "red";
+  btn.addEventListener('click', function(){
+    const x = parseInt(elX.value,10);
+    const y = parseInt(elY.value,10);
+
+    if(!Number.isInteger(x) || !Number.isInteger(y) || x < 1 || y < 1){
+      show('Bitte positive ganze Zahlen eingeben.', false);
+      return;
     }
-}
-</script>
 
+    if(solutions.has(x + '|' + y)){
+      show('✅ Richtig! Gut gemacht — das ist eine Lösung.', true);
+    } else {
+      show('❌ Falsch. Versuch es nochmal.', false);
+    }
+  });
+
+  hint.addEventListener('click', function(){
+    alert('Tipp: 1729 = 10^3 + 9^3 und außerdem = 12^3 + 1^3. Finde eines dieser Paare.');
+  });
+
+  reset.addEventListener('click', function(){
+    elX.value = '';
+    elY.value = '';
+    res.style.display = 'none';
+  });
+
+  // kleine Komfort-Feature: Enter im Eingabefeld löst Prüfung aus
+  [elX, elY].forEach(inp => inp.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') btn.click();
+  }));
+})();
+</script>
 </body>
 </html>
