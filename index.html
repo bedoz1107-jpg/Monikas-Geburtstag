@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Mathe-Rätsel</title>
+<style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f4; }
+    input, button { font-size: 1.2em; padding: 8px; margin: 5px; }
+    .result { margin-top: 20px; font-weight: bold; }
+    h1 { color: #333; }
+</style>
+</head>
+<body>
+
+<h1>Mathe-Rätsel mit geiler Belohnung</h1>
+<p>Finde <b>ein Paar</b> positiver ganzer Zahlen <code>x</code> und <code>y</code>, sodass gilt:</p>
+<p><code>x³ + y³ = 1729</code></p>
+
+<label for="x">x:</label>
+<input type="number" id="x" min="1">
+<label for="y">y:</label>
+<input type="number" id="y" min="1">
+<br>
+<button onclick="checkAnswer()">Prüfen</button>
+
+<div class="result" id="result"></div>
+
+<script>
+function checkAnswer() {
+    const x = parseInt(document.getElementById('x').value, 10);
+    const y = parseInt(document.getElementById('y').value, 10);
+    const res = document.getElementById('result');
+
+    // Liste aller Lösungen
+    const solutions = [
+        [12, 1],
+        [1, 12],
+        [10, 9],
+        [9, 10]
+    ];
+
+    let correct = solutions.some(pair => pair[0] === x && pair[1] === y);
+
+    if (correct) {
+        res.textContent = "✅ Richtig! Feini, hier ist deine Belohnung:";
+        res.style.color = "green";
+    } else {
+        res.textContent = "❌ Opfer. mach nochmal";
+        res.style.color = "red";
+    }
+}
+</script>
+
+</body>
+</html>
