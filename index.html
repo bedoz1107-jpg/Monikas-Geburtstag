@@ -162,7 +162,7 @@ function checkAnswer(index, button) {
   
   if (index === qData.correct) {
     button.classList.add("correct");
-    document.getElementById("result").textContent = "✅ Richtig!";
+    document.getElementById("result").textContent = "✅ Feini! ";
     setTimeout(() => {
       currentQuestion++;
       if (currentQuestion < quizData.length) {
@@ -173,7 +173,7 @@ function checkAnswer(index, button) {
     }, 800);
   } else {
     button.classList.add("wrong");
-    document.getElementById("result").textContent = "❌ Falsch, versuche es nochmal!";
+    document.getElementById("result").textContent = "❌ Opfer. mach nochmal.";
     setTimeout(() => {
       button.classList.remove("wrong");
     }, 800);
@@ -182,7 +182,7 @@ function checkAnswer(index, button) {
 
 function showEndScreen() {
   document.getElementById("quiz-title").textContent = "🎉 Glückwunsch!";
-  document.getElementById("question-text").textContent = "Du hast alle Fragen richtig beantwortet!";
+  document.getElementById("question-text").textContent = "Feini! Hier ist deine Belohnung: RVHE-LY268T-MTBR <3";
   document.getElementById("answers").innerHTML = "";
   document.getElementById("result").textContent = "";
 }
@@ -191,3 +191,4 @@ loadQuestion();
 </script>
 </body>
 </html>
+
