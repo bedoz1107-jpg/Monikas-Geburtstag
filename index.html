@@ -7,13 +7,17 @@
 
 <style>
 :root {
-  --bg-gradient: linear-gradient(135deg, #1e1e2f 0%, #27293d 100%);
-  --card-bg: rgba(30, 30, 47, 0.85);
-  --accent: #4f9aff;
-  --text-color: #e0e0ff;
-  --muted: #a0a0b3;
-  --correct-bg: #2d7a2d;
-  --wrong-bg: #a83a3a;
+  --bg-gradient: linear-gradient(135deg, #f9fafc 0%, #e8ebf0 100%);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --accent: #3b82f6; /* ein kräftiges Blau */
+  --text-color: #1f2937; /* dunkelgrau für Text */
+  --muted: #6b7280; /* mittelgrau */
+  --correct-bg: #d1fae5; /* hellgrün */
+  --correct-color: #065f46; /* dunkelgrün */
+  --wrong-bg: #fee2e2; /* hellrot */
+  --wrong-color: #991b1b; /* dunkelrot */
+  --shadow-light: rgba(59, 130, 246, 0.3);
+  --shadow-muted: rgba(0,0,0,0.08);
 }
 
 * {
@@ -48,7 +52,7 @@ html, body {
 .card {
   background: var(--card-bg);
   border-radius: 24px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 10px 30px var(--shadow-muted);
   padding: 48px 36px;
   text-align: center;
   transition: transform 0.35s ease, box-shadow 0.35s ease;
@@ -56,8 +60,8 @@ html, body {
 }
 
 .card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.85);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px var(--shadow-light);
 }
 
 h1 {
@@ -91,14 +95,15 @@ button {
   font-weight: 600;
   font-size: 17px;
   cursor: pointer;
-  transition: background-color 0.35s ease, color 0.35s ease, transform 0.15s ease;
-  box-shadow: 0 4px 10px rgba(79,154,255,0.25);
+  transition: background-color 0.35s ease, color 0.35s ease, transform 0.15s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
 }
 
 button:hover:not(.correct):not(.wrong) {
   background-color: var(--accent);
-  color: var(--card-bg);
+  color: white;
   transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
 }
 
 button:active:not(.correct):not(.wrong) {
@@ -107,26 +112,25 @@ button:active:not(.correct):not(.wrong) {
 
 button.correct {
   background-color: var(--correct-bg);
-  border-color: var(--correct-bg);
-  color: #d0f0d0;
-  box-shadow: 0 0 12px 3px rgba(45, 122, 45, 0.7);
+  border-color: var(--correct-color);
+  color: var(--correct-color);
+  box-shadow: 0 0 14px 3px rgba(5, 95, 70, 0.7);
 }
 
 button.wrong {
   background-color: var(--wrong-bg);
-  border-color: var(--wrong-bg);
-  color: #f5c5c5;
-  box-shadow: 0 0 12px 3px rgba(168, 58, 58, 0.7);
+  border-color: var(--wrong-color);
+  color: var(--wrong-color);
+  box-shadow: 0 0 14px 3px rgba(153, 27, 27, 0.7);
 }
 
 .result {
   margin-top: 24px;
   font-weight: 700;
   font-size: 18px;
-  min-height: 28px;
+  min-height: 30px;
   color: var(--accent);
   user-select: none;
-  min-height: 30px;
 }
 
 @media (max-width: 600px) {
